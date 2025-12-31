@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDNE | Samsung Medical Next</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
+    "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react,react-dom",
+    "recharts": "https://esm.sh/recharts@2.13.3?external=react,react-dom",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/"
+  }
+}
+</script>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: #f8fafc;
+    }
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid #0f172a;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div id="loading-screen">
+    <div class="spinner"></div>
+    <p style="margin-top: 20px; color: #64748b; font-size: 12px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;">Initializing SDNE...</p>
+  </div>
+
+  <div id="root"></div>
+
+  <!-- Load index.tsx directly as a Babel module -->
+  <script type="text/babel" data-type="module" src="index.tsx"></script>
+
+  <script>
+    // Security check for protocol
+    if (window.location.protocol === 'file:') {
+      document.getElementById('root').innerHTML = `
+        <div style="padding: 40px; text-align: center; font-family: sans-serif;">
+          <h1 style="color: #ef4444;">Access Denied</h1>
+          <p>Please upload these files to GitHub Pages to view the demo.</p>
+        </div>
+      `;
+      document.getElementById('loading-screen').remove();
+    }
+  </script>
+<script type="module" src="/index.tsx"></script>
+</body>
+</html>
