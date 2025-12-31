@@ -15,9 +15,9 @@
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "react/jsx-runtime": "https://esm.sh/react@19.0.0/jsx-runtime",
-    "lucide-react": "https://esm.sh/lucide-react@0.460.0?external=react",
-    "framer-motion": "https://esm.sh/framer-motion@11.11.11?external=react,react-dom",
-    "recharts": "https://esm.sh/recharts@2.13.3?external=react,react-dom",
+    "lucide-react": "https://esm.sh/lucide-react@0.460.0?deps=react@19.0.0",
+    "framer-motion": "https://esm.sh/framer-motion@11.11.11?deps=react@19.0.0,react-dom@19.0.0",
+    "recharts": "https://esm.sh/recharts@2.13.3?deps=react@19.0.0,react-dom@19.0.0",
     "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
     "react/": "https://esm.sh/react@^19.2.3/"
   }
@@ -27,9 +27,10 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       margin: 0;
       background-color: #f8fafc;
+      overflow-x: hidden;
     }
     #loading-screen {
       position: fixed;
@@ -40,11 +41,12 @@
       align-items: center;
       justify-content: center;
       z-index: 100;
+      transition: opacity 0.5s ease;
     }
     .spinner {
       width: 40px;
       height: 40px;
-      border: 3px solid #f3f3f3;
+      border: 3px solid #f1f5f9;
       border-top: 3px solid #0f172a;
       border-radius: 50%;
       animation: spin 1s linear infinite;
@@ -56,25 +58,35 @@
 <body>
   <div id="loading-screen">
     <div class="spinner"></div>
-    <p style="margin-top: 20px; color: #64748b; font-size: 12px; font-weight: bold; letter-spacing: 0.1em; text-transform: uppercase;">Initializing SDNE...</p>
+    <p style="margin-top: 20px; color: #64748b; font-size: 11px; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase;">Initializing SDNE Core</p>
+    <p style="color: #94a3b8; font-size: 10px; margin-top: 5px;">Synchronizing Galaxy Sensors...</p>
   </div>
 
   <div id="root"></div>
 
-  <!-- Load index.tsx directly as a Babel module -->
   <script type="text/babel" data-type="module" src="index.tsx"></script>
 
   <script>
-    // Security check for protocol
+    // Security check for local execution
     if (window.location.protocol === 'file:') {
       document.getElementById('root').innerHTML = `
-        <div style="padding: 40px; text-align: center; font-family: sans-serif;">
-          <h1 style="color: #ef4444;">Access Denied</h1>
-          <p>Please upload these files to GitHub Pages to view the demo.</p>
+        <div style="padding: 100px 40px; text-align: center; max-width: 500px; margin: 0 auto;">
+          <h1 style="color: #ef4444; font-size: 24px;">Local File Restriction</h1>
+          <p style="color: #64748b; line-height: 1.6;">Browsers block medical visualization logic when run from a local folder.</p>
+          <div style="margin-top: 20px; background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0;">
+             <strong>Solution:</strong> Upload to GitHub Pages or use a local web server.
+          </div>
         </div>
       `;
       document.getElementById('loading-screen').remove();
     }
+    // Failsafe: if React doesn't load in 8 seconds, show an error
+    setTimeout(() => {
+      const loader = document.getElementById('loading-screen');
+      if (loader && loader.style.opacity !== '0') {
+        loader.innerHTML = '<p style="color: #ef4444; font-weight: bold;">Sync Error: Retrying connection...</p>';
+      }
+    }, 8000);
   </script>
 <script type="module" src="/index.tsx"></script>
 </body>
